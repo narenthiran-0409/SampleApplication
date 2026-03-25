@@ -1,10 +1,10 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // ✅ Dynamic Port (Render)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-// ✅ Add services
+// ✅ Services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -19,17 +19,16 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ✅ Use CORS AFTER app is built
+// ✅ Middleware
 app.UseCors("AllowAll");
 
-// Swagger
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger (keep always enabled for demo)
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// ❌ Remove this for Render
+// app.UseHttpsRedirection();
+
 app.UseAuthorization();
 
 app.MapControllers();
